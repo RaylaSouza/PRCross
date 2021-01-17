@@ -25,39 +25,23 @@ import MomentUtils from "@date-io/moment";
 import moment from "moment";
 import api from '../../../services/api';
 
-const ViewWorkout = () => {
+const ViewWorkout = (props) => {
   const classes = useStyles();
   const [open, setOpen] = useState(false);
-  const [tipo, setTipo] = React.useState("");
-  const [workouts, setWorkouts] = useState({
-    data: [
-      {
-        titulo: "Aquecimento",
-        observacoes: "observações sobre o aquecimento",
-        exercicios: "EXERCICIOS INSERIDO AQUI",
-        tipo: "AMRAP",
-        tempo: "25'",
-      },
-      {
-        titulo: "Treino",
-        observacoes: "observações sobre o aquecimento",
-        exercicios: "EXERCICIOS INSERIDO AQUI",
-        tipo: "TABATA",
-        tempo: "25'",
-      },
-      {
-        titulo: "Treino",
-        observacoes: "observações sobre o aquecimento",
-        exercicios: "EXERCICIOS INSERIDO AQUI",
-        tipo: "EMON",
-        tempo: "25'",
-      },
-    ],
-  });
-  
+  const [tipo, setTipo] = useState("");
+  const [selectedDate, setSelectedDate] = React.useState(moment().format("YYYY-MM-DD"));
+  let elements = props.location.search.split('/');
+  let [workouts, setWorkouts] = React.useState([]);
+
   useEffect(() => {
-    api.get('/workout/days');    
+    getTreinos(elements[1], elements[2])    
   }, []);
+
+  const getTreinos = (id, date) => {
+    api.get(`/workout/days/` + id + "/" + date).then(res => {
+      setWorkouts(res.data);
+    }); 
+  }
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -70,9 +54,8 @@ const ViewWorkout = () => {
 
   const handleDateChange = (date) => {
     setSelectedDate(date);
+    getTreinos(elements[1], moment(date._d).format("YYYY-MM-DD"))
   };
-
-  const [selectedDate, setSelectedDate] = React.useState(moment().format());
 
   const renderDialogNewWorkout = () => {
     return (
@@ -135,9 +118,9 @@ const ViewWorkout = () => {
                 margin="normal"
                 id="date-picker-dialog"
                 label="Date picker dialog"
-                format="MM/dd/yyyy"
+                format="DD/MM/YYYY"
                 value={selectedDate}
-                onChange={handleDateChange}
+                onChange={date => handleDateChange(date)}
                 KeyboardButtonProps={{
                   "aria-label": "change date",
                 }}
@@ -155,24 +138,24 @@ const ViewWorkout = () => {
         </div>
         <Divider />
         <div className={classes.cards}>
-          {workouts.data.map((el) => (
+          {workouts.map((el) => (
             <Card className={classes.card}>
               <CardActionArea
                 className={
-                  el.titulo === "Aquecimento" ? classes.warmUp : classes.workout
+                  el.nivel === "aquecimento" ? classes.warmUp : classes.workout
                 }
               >
                 <CardContent>
                   <div className={classes.flex2}>
-                    <h4>{el.titulo}</h4>
+                    <h4>{el.nome}</h4>
                     <div className={classes.flex2}>
                       <p className={classes.marginRight}>Tipo:{el.tipo}</p>
-                      <p className={classes.marginRight}>Tempo: {el.tempo}</p>
+                      <p className={classes.marginRight}>Tempo: {el.tempo === null ? "no cap" : el.tempo + "min"}</p>
                     </div>
                   </div>
-                  <p>{el.observacoes}</p>
+                  <p>{el.descricao}</p>
                   <Divider />
-                  <p>{el.exercicios}</p>
+                  <p>{el.treino}</p>
                 </CardContent>
               </CardActionArea>
             </Card>
