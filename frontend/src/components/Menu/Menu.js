@@ -6,12 +6,12 @@ import {
   Toolbar,
   List,
   CssBaseline,
-  Typography,
   Divider,
   IconButton,
   ListItem,
   ListItemIcon,
   ListItemText,
+  Typography
 } from "@material-ui/core";
 
 import PersonIcon from "@material-ui/icons/Person";
@@ -62,7 +62,7 @@ const Menu = () => {
           >
             <MenuIcon />
           </IconButton>
-          <Typography variant="h6" noWrap>
+          <Typography component={'div'} variant="h6">
             PRCross
           </Typography>
         </Toolbar>

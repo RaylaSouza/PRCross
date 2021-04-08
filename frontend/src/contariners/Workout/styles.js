@@ -23,6 +23,15 @@ export const useStyles = makeStyles((theme) => ({
     width: "100%",
   },
 
+  inputDialogInt: {
+    marginBottom: "15px",
+    width: "15%",
+  },
+
+  labelDialog: {
+    width: "20%",
+  },
+
   iconButton: {
     padding: 10,
   },
@@ -38,6 +47,12 @@ export const useStyles = makeStyles((theme) => ({
   flex2: {
     display: "flex",
     justifyContent: "space-between",
+    alignItems: "center",
+  },
+
+  flex3: {
+    display: "flex",
+    justifyContent: "space-around",
     alignItems: "center",
   },
 
@@ -61,4 +76,14 @@ export const useStyles = makeStyles((theme) => ({
   workout: {
     borderLeft: "2px solid green",
   },
+
+  actions: {
+    display: "flex",
+    justifyContent: "space-between",
+    alignItems: "flex-end",
+  },
+
+  action: {
+    cursor: "pointer",
+  }
 }));
