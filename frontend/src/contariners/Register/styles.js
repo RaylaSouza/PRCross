@@ -18,4 +18,10 @@ export const useStyles = makeStyles((theme) => ({
       submit: {
         margin: theme.spacing(3, 0, 2),
       },
+      radio:{
+        flexDirection: 'initial',
+      },
+      login:{
+          paddingBottom: '30px',
+      }
 }));
