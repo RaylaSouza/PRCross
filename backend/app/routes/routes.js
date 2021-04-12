@@ -6,6 +6,38 @@ const Joi = require('joi');
 const consultas = require('../../config/consultas')
 
 module.exports = {
+    //PESSOAS
+    roteInsertPerson: function(app) {
+        app.post("/register", function(req, res) {
+            consultas.setPerson(req.body, connection, function(err, results) {
+                if(err){
+                    return res.status(200).send({
+                        error: true,
+                        message: err.sqlMessage,
+                        code: err.code,
+                    });
+                } else if (results.affectedRows <= 0){
+                    return res.status(200).send({
+                        error: true,
+                        message: "Não foi possivel cadastrar usuário"
+                    });
+                } else {
+                    res.status(200).send(JSON.stringify(req.body, null, 3));
+                }
+            })
+        });
+    },
+
+    //GRUPOS
+    roteInsertGroup: function(app) {
+        app.post("/workout/days/newGroup", function(req, res) {
+            consultas.setGroup(req.body, connection, function(err, results) {
+                res.status(200).send(JSON.stringify(req.body, null, 3));
+            })
+        });
+    },
+
+    //TREINOS
     roteWorkout: function(app) {
         app.get("/workout", function(req, res) {
             consultas.getGrupos(connection, function(err, results) {
@@ -86,14 +118,6 @@ module.exports = {
                     return res.status(200).send(JSON.stringify(req.body, null, 3));
                 }
             });
-        });
-    },
-
-    roteInsertGroup: function(app) {
-        app.post("/workout/days/newGroup", function(req, res) {
-            consultas.setGroup(req.body, connection, function(err, results) {
-                res.status(200).send(JSON.stringify(req.body, null, 3));
-            })
         });
     },
 };

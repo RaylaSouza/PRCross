@@ -1,4 +1,10 @@
 module.exports = {
+    //PESSOAS
+    setPerson: function(person, connection, callback){
+        let sql = 'insert into pessoa set ?';
+        connection.query(sql, person, callback);
+    },
+
     //GRUPOS
     getGrupos: function(connection, callback){
         let sql = "SELECT * FROM grupo;";
