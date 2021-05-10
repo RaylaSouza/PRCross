@@ -1,8 +1,19 @@
 module.exports = {
+    //AUTH
+    getLogin: function(email, senha, connection, callback){
+        let sql = `select email from pessoa where email = '${email}' && senha = '${senha}'`;
+        connection.query(sql, callback);
+    },
+
     //PESSOAS
     setPerson: function(person, connection, callback){
         let sql = 'insert into pessoa set ?';
         connection.query(sql, person, callback);
+    },
+
+    getAllPerson: function(connection, callback){
+        let sql = 'SELECT cpf as id, nome, sobrenome FROM pessoa ;';
+        connection.query(sql, callback);
     },
 
     //GRUPOS
@@ -14,6 +25,21 @@ module.exports = {
     setGroup: function(group, connection, callback){
         let sql = 'insert into grupo set ?';
         connection.query(sql, group, callback);
+    },
+
+    setPersonForGroup: function(data, connection, callback){
+        let sql = 'insert into pessoa_has_grupo set ?';
+        connection.query(sql, data, callback)
+    },
+
+    deleteGroup: function(idGroup, connection, callback){
+        let sql = `delete from grupo where idGrupo ='${idGroup}'`;
+        connection.query(sql, callback);
+    },
+
+    deletePersonHasGroup: function(idGroup, connection, callback){
+        let sql = `delete from pessoa_has_grupo where grupo_idGrupo ='${idGroup}'`;
+        connection.query(sql, callback);
     },
 
     //TREINO

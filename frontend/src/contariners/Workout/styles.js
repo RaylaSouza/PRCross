@@ -18,6 +18,16 @@ export const useStyles = makeStyles((theme) => ({
     flex: 1,
   },
 
+  dialogGroup: {
+    width: "100%",
+    backgroundColor: "red",
+  }, 
+
+  tablePerson: {
+    height: '350px',
+    width: '100%'
+  },
+
   inputDialog: {
     marginBottom: "15px",
     width: "100%",

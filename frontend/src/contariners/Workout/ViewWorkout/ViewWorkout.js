@@ -24,6 +24,7 @@ import {
 import MomentUtils from "@date-io/moment";
 import moment from "moment";
 import api from '../../../services/api';
+import Snackbar from '../../../components/Snackbar/Snackbar';
 
 const ViewWorkout = (props) => {
   const classes = useStyles();
@@ -40,10 +41,12 @@ const ViewWorkout = (props) => {
   const [descanso, setDescanso] = useState(0);
   const [ativo, setAtivo] = useState(0);
   const [idTreinoEdit, setIdTreinoEdit] = useState('');
+  const [openSnackbar, setOpenSnackbar] = useState(false);
+  const [severity, setSeverity] = useState();
+  const [message, setMessage] = useState();
   const elements = props.location.search.split('/');
   const groupId = useState(elements[1]);
   const dateToday = useState(elements[2]);
-  const [workoutEdit, setWorkoutEdit] = useState('');
   const createHistory = require("history").createBrowserHistory;
   let history = createHistory();
   let [workouts, setWorkouts] = useState([]);
@@ -57,6 +60,22 @@ const ViewWorkout = (props) => {
       getTreinos(groupId, dateToday[0])    
     }
   }, []);
+
+  const handleChildClicked = () => {
+    setOpenSnackbar(false);
+}
+
+const renderSnackbar = () => {
+    return (
+        <>
+            <Snackbar
+                onClose={() => handleChildClicked()}
+                severity = {severity}
+                message = {message}
+            />
+        </>
+    );
+};
 
   const getTreinos = (id, date) => {
     api.get(`/workout/days/` + id + "/" + date).then(res => {
@@ -111,7 +130,7 @@ const ViewWorkout = (props) => {
     let editTreino =  
     {
       exercicios :{
-        idTreino: '',
+        idTreino: idTreinoEdit,
         nome: nome, 
         tempo: tempo, 
         tipo: tipo, 
@@ -126,15 +145,17 @@ const ViewWorkout = (props) => {
 
     api.post(`/workout/days`, editTreino).then(res => {
       if(res.data.error){
-        console.log(res.data.message);
+        setMessage(res.data.message);
+        setSeverity('error');
+        setOpenSnackbar(true);
       } else {
-        console.log(res.data);
+        history.push(`/workout/days?/${groupId[0]}/${moment(selectedDate).format("YYYY-MM-DD")}`);
+        window.location.reload(true);
       }
     }).catch(e => {
       console.log(e);
     }); 
-    // history.push(`/workout/days?/${groupId[0]}/${moment(selectedDate).format("YYYY-MM-DD")}`);
-    // window.location.reload(true);
+    
     handleCloseEdit(false);
   };
 
@@ -579,6 +600,7 @@ const ViewWorkout = (props) => {
   return (
     <>
       {renderWorkoutDay()} {open ? renderDialogNewWorkout(): null} {openEdit ? renderDialogEditWorkout() : null}
+      {openSnackbar ? renderSnackbar(): null}
     </>
   );
 };

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { useStyles } from "./styles";
 import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
@@ -9,9 +9,59 @@ import Grid from '@material-ui/core/Grid';
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import Typography from '@material-ui/core/Typography';
 import Container from '@material-ui/core/Container';
+import Snackbar from '../../components/Snackbar/Snackbar';
+import api from '../../services/api';
 
 const Login = (props) => {
+const createHistory = require("history").createBrowserHistory;
+let history = createHistory();
 const classes = useStyles();
+const [openSnackbar, setOpenSnackbar] = useState(false);
+const [severity, setSeverity] = useState();
+const [message, setMessage] = useState();
+const [email, setEmail] = useState();
+const [senha, setSenha] = useState();
+
+const handleChildClicked = () => {
+    setOpenSnackbar(false);
+}
+
+const renderSnackbar = () => {
+    return (
+        <>
+            <Snackbar
+                onClose={() => handleChildClicked()}
+                severity = {severity}
+                message = {message}
+            />
+        </>
+    );
+};
+
+const getLogin = (login) => {
+    api.post(`/login`, login).then(res => {
+        if(res.data.error){
+            setMessage(res.data.message);
+            setSeverity('error');
+            setOpenSnackbar(true);
+        } else {
+            history.push(`/timer`);
+            window.location.reload(true);
+        }
+      }).catch(e => {
+        console.log(e);
+      }); 
+}
+
+const onLogin = (e) => {
+    e.preventDefault();
+        let login = {
+            email: email, 
+            senha: senha, 
+        };
+        getLogin(login);
+  };
+
   const renderLogin = () => {
     return (
         <>
@@ -24,7 +74,7 @@ const classes = useStyles();
                 <Typography component="h1" variant="h5">
                    PRCross
                 </Typography>
-                <form className={classes.form} noValidate>
+                <form className={classes.form} onSubmit={(e) => onLogin(e)}>
                 <TextField
                     variant="outlined"
                     margin="normal"
@@ -34,6 +84,8 @@ const classes = useStyles();
                     label="E-mail"
                     name="email"
                     autoComplete="email"
+                    type="email"
+                    onChange={event =>setEmail(event.target.value)}
                     autoFocus
                 />
                 <TextField
@@ -46,6 +98,7 @@ const classes = useStyles();
                     type="password"
                     id="password"
                     autoComplete="current-password"
+                    onChange={event =>setSenha(event.target.value)}
                 />
                 <Button
                     type="submit"
@@ -70,7 +123,10 @@ const classes = useStyles();
     );
   };
 
-  return <>{renderLogin()}</>;
+  return <>
+  {renderLogin()}
+  {openSnackbar ? renderSnackbar(): null}
+  </>;
 };
 export default Login;
 
