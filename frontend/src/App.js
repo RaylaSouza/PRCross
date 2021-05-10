@@ -18,6 +18,7 @@ function App() {
         <Route path="/register" exact component={Register} />
         <Route path="/profile" exact component={Menu} />
         <Route path="/workout" exact component={Menu} />
+        <Route path="/timer" exact component={Menu} />
         <Route path="/workout/days" exact component={Menu} />
         <Redirect to="/" />
       </Switch>

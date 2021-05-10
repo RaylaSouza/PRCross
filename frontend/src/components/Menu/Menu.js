@@ -87,7 +87,7 @@ const Menu = () => {
         </div>
         <Divider />
         <List>
-          <ListItem button component={Link} to="/" key="Timer">
+          <ListItem button component={Link} to="/timer" key="Timer">
             <ListItemIcon>
               <AccessTimeIcon />
             </ListItemIcon>
@@ -112,7 +112,7 @@ const Menu = () => {
           [classes.contentShift]: open,
         })}
       >
-        <Route exact path="/" component={Timer} />
+        <Route exact path="/timer" component={Timer} />
         <Route exact path="/profile" component={Profile} />
         <Route exact path="/workout" component={Workout} />
         <Route exact path="/workout/days" component={ViewWorkout} />
